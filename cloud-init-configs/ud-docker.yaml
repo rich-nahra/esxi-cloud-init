@@ -1,0 +1,27 @@
+#cloud-config
+apt:
+  sources:
+    docker:
+      arches: amd64
+      source: "deb https://download.docker.com/linux/ubuntu $RELEASE stable"
+      keyserver: "hkp://keyserver.ubuntu.com:80"
+      keyid: 0EBFCD88
+package_upgrade: true
+packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+groups:
+  - docker
+users:
+  - default
+  - name: ubuntu
+    ssh-authorized-keys:
+      - "{{ ssh_key }}"
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: [sudo,docker]
+    shell: /bin/bash
+ssh_pwauth: True
+chpasswd:
+  list: |
+    ubuntu:password

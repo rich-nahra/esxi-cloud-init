@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+govc import.ova -options=tmp/options.json -ds={{ ds }} {{ ova_save_as }}
+govc vm.disk.change -vm {{ vmname }} -disk.label 'Hard disk 1' -size {{ disk }}
+govc vm.upgrade -vm {{ vmname }}
+govc vm.change -vm {{ vmname }} \
+   -e guestinfo.metadata="{{ metadata | b64encode }}" \
+   -e guestinfo.metadata.encoding='base64' \
+   -e guestinfo.userdata="{{ lookup('template', 'templates/userdata.yaml.j2') | b64encode }}" \
+   -e guestinfo.userdata.encoding='base64' \
+   -e disk.enableUUID=1 \
+   -m {{ mem }} \
+   -c {{ cpu }}
+govc device.remove -vm {{ vmname }} floppy-8000
+govc device.remove -vm {{ vmname }} cdrom-3002
+{% if  firmware != 'bios' %}
+govc device.boot -vm {{ vmname }} --firmware efi -secure
+{% endif %}
+{% if  serial_port %}
+govc device.serial.add -vm {{ vmname }}
+govc device.serial.connect -vm {{ vmname }} "[{{ ds }}] {{ vmname }}/console.log"
+{% endif %}
+govc vm.power -on {{ vmname }}

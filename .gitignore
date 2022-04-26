@@ -1,0 +1,7 @@
+*.ova
+.govcvars.sh
+tmp
+.vault_pass
+group_vars/secret.yaml
+.DS_Store
+esx-cloud-image.zip

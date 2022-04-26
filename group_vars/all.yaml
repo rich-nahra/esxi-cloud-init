@@ -1,0 +1,31 @@
+local_lan_info:
+  gateway: 192.168.86.1
+  subnet: 255.255.255.0
+  nameservers:
+    - 192.168.86.3
+  search: 
+    - crazylan.net
+env:
+  GOVC_INSECURE: 1
+  GOVC_URL: 192.168.86.101
+  GOVC_USERNAME: root
+  GOVC_NETWORK: VM Network
+  GOVC_RESOURCE_POOL: '*/Resources' 
+  GOVC_DATACENTER: ha-datacenter
+  # lookup ansible vault password. plain text value works as well
+  GOVC_PASSWORD: "{{ lookup('file', 'group_vars/secret.yaml') }}"
+  # GOVC_PASSWORD: MyPlainTextPassword
+cloud_image:
+  '20.04': https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.ova
+  '21.04': https://cloud-images.ubuntu.com/releases/hirsute/release/ubuntu-21.04-server-cloudimg-amd64.ova
+  '21.10': https://cloud-images.ubuntu.com/impish/current/impish-server-cloudimg-amd64.ova
+  '22.04': https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.ova
+# override this on cli (-e test_mode=true)
+test_mode: no
+# do not modify lines below
+ansible_connection: local
+ssh_key: "{{ lookup('file', ssh_public_key_file) }}"
+ova: "{{ cloud_image[ubuntu_version | quote] }}"
+ova_save_as: "./tmp/{{ ova | split('/') | last }}"
+ip_subnet: "{{ local_lan_info.gateway }}/{{ local_lan_info.subnet }}"
+dc_vms: "/{{ env.GOVC_DATACENTER }}/vm"

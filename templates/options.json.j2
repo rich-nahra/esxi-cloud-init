@@ -1,0 +1,22 @@
+{
+    "DiskProvisioning": "flat",
+    "IPAllocationPolicy": "dhcpPolicy",
+    "IPProtocol": "IPv4",
+    "PropertyMapping": [
+        {
+            "Key": "instance-id",
+            "Value": "id-ovf"
+        }
+    ],
+    "NetworkMapping": [
+        {
+            "Name": "VM Network",
+            "Network": "{{ lookup('env', 'GOVC_NETWORK') }}"
+        }
+    ],
+    "MarkAsTemplate": false,
+    "PowerOn": false,
+    "InjectOvfEnv": false,
+    "WaitForIP": false,
+    "Name": "{{ vmname }}"
+}

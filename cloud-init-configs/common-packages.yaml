@@ -1,0 +1,13 @@
+packages:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - software-properties-common
+  - nfs-common
+  - jq
+  - tree
+  - wget
+  - python3-pip
+  - gnupg-agent
+  - cockpit
+  - cockpit-pcp

@@ -1,0 +1,19 @@
+metadata_dhcp:
+  local-hostname: "{{ vmname }}"
+  network:
+    version: 2
+    ethernets:
+      ens192:
+        dhcp4: true
+metadata_static:
+  local-hostname: "{{ vmname }}"
+  network:
+    version: 2
+    ethernets:
+      ens192:
+        addresses:
+          - "{{ ip }}/{{ ip_subnet | ipaddr('prefix') }}"
+        gateway4: "{{ local_lan_info.gateway }}"
+        nameservers:
+          addresses: "{{ local_lan_info.nameservers }}"
+          search: "{{ local_lan_info.search }}"

@@ -1,0 +1,23 @@
+#cloud-config
+package_upgrade: true
+packages:
+  - podman
+  - cockpit-podman
+users:
+  - default
+  - name: ubuntu
+    ssh-authorized-keys:
+      - "{{ ssh_key }}"
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: sudo
+    shell: /bin/bash
+ssh_pwauth: True
+chpasswd:
+  list: |
+    ubuntu:password
+power_state:
+  delay: "+5"
+  mode: reboot
+  message: rebooting server
+  timeout: 2
+  condition: True

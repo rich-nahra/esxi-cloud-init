@@ -1,0 +1,121 @@
+---
+- hosts: localhost
+  gather_facts: false
+  vars:
+    vmname: docker
+    cpu: 2
+    mem: 8192
+    disk: 64G
+    # dhcp or ip
+    ip: 192.168.86.160
+    ds: ds-nvme-evo5
+    # bios or efi
+    firmware: bios
+    serial_port: no
+    user_data_file: cloud-init-configs/ud-docker.yaml
+    ubuntu_version: 22.04
+    ssh_public_key_file: ~/.ssh/id_rsa.pub
+  vars_files:
+    - group_vars/metadata.yaml
+  tasks:
+    - name: check ssh key file path
+      stat:
+        path: "{{ ssh_public_key_file }}"
+      register: reg_ssh_stat
+
+    - assert:
+        that: reg_ssh_stat.stat.exists
+        fail_msg: "{{ ssh_public_key_file }} does not exist"
+    
+    - name: list vms
+      command: "govc ls --json {{ dc_vms }}"
+      environment: "{{ env }}"
+      register: reg_vms
+
+    - set_fact:
+        existing_vms: "{{ (reg_vms.stdout | from_json).elements | json_query('[*].Path') }}"
+
+    - name: vm already exists check
+      vars:
+        vm_path: "{{ dc_vms }}/{{ vmname }}"
+      assert:
+        that:
+          - vm_path not in existing_vms
+        fail_msg: "{{ vm_path }} virtual machine already exists"
+        success_msg: "false. continuing..."
+      when:
+        - not test_mode
+
+    - name: create tmp directory
+      file:
+        state: directory
+        path: ./tmp
+
+    - name: check if ova already exists
+      stat:
+        path: "{{ ova_save_as }}"
+      register: reg_ova_stat
+
+    - name: download ova if it doesn't exist
+      get_url:
+        url: "{{ ova }}"
+        dest: "{{ ova_save_as }}"
+      when:
+        - not reg_ova_stat.stat.exists
+
+    - name: merge common packages with userdata packages
+      set_fact:
+        userdata: "{{ ud | combine(merged)  }}"
+      vars:
+        ud: "{{ (lookup('template', user_data_file) | from_yaml) }}"
+        common: "{{ (lookup('file', 'cloud-init-configs/common-packages.yaml') | from_yaml) }}"
+        merged: "{{ {'packages': (common.packages + ud.packages) | sort }}}"
+
+    - name: write options file from template
+      template:
+        src: templates/options.json.j2
+        dest: tmp/options.json
+
+    - name: prepare metadata
+      set_fact:
+        metadata: "{{ metadata_dhcp if (ip | lower == 'dhcp') else metadata_static }}"
+
+    - name: diagnostic write merged userdata fact and metadata when running with test_mode=true
+      copy:
+        content: "{{ item.content }}"
+        dest: "{{ item.dest }}"
+      loop:
+        - {content: "{{ lookup('template', 'templates/userdata.yaml.j2') }}", dest: tmp/userdata.yaml }
+        - {content: "{{ metadata }}", dest: tmp/metadata.json }
+      when:
+        - test_mode
+
+    - name: generate govc script
+      template:
+        src: templates/govc.sh.j2
+        dest: tmp/resolved_script.sh
+
+    - name: provisioning block 
+      block:    
+        - name: let'r rip
+          command: sh tmp/resolved_script.sh
+          environment: "{{ env }}"
+
+        - name: wait until guest tools return IP address
+          shell: "govc ls --json /ha-datacenter/vm/{{ vmname }}| jq '.elements[].Object.Guest.Net[].IpAddress'"
+          environment: "{{ env }}"
+          register: reg_vm_ip
+          until: reg_vm_ip.stdout
+          retries: 100
+          delay: 10
+
+        - name: display IP address
+          debug:
+            msg: 
+              - "{{ vmname }}'s ip address is {{ ip }}. Note: cloud-init may still be running.  check the log file /var/log/cloud-init-output.log"
+              - "{{ ssh }}"
+          vars: 
+            ip: "{{ reg_vm_ip.stdout | from_json | ansible.netcommon.ipv4('address') | first }}"
+            ssh: "ssh -i {{ ssh_public_key_file | replace('.pub', '') }} {{ (lookup('template', user_data_file) | from_yaml).users[1].name }}@{{ ip }}"
+      when:
+        - not test_mode
