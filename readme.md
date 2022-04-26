@@ -1,6 +1,6 @@
 # ESXi Ubuntu Cloud-Init 
 
-This playbook is used to quickly deploy Ubuntu cloud-images and bootstrap the OS using cloud-init manifest on a standalone ESXi host (without vsphere).    
+This playbook is used to quickly deploy Ubuntu cloud-images and bootstrap the OS using cloud-init manifest on a standalone ESXi host (without vcenter).    
 
 Using a cloud image with cloud-init is significantly faster than ISO mount install.  In my environment, I can have Ubuntu up and running in under 1 minute. 
 
