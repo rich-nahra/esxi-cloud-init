@@ -1,6 +1,6 @@
 # ESXi Ubuntu Cloud-Init 
 
-This playbook is used to quickly deploy Ubuntu cloud-images and bootstrap the OS using cloud-init on a standalone ESXi host (without vsphere).    
+This playbook is used to quickly deploy Ubuntu cloud-images and bootstrap the OS using cloud-init manifest on a standalone ESXi host (without vsphere).    
 
 Using a cloud image with cloud-init is significantly faster than ISO mount install.  In my environment, I can have Ubuntu up and running in under 1 minute. 
 
@@ -12,7 +12,7 @@ Using a cloud image with cloud-init is significantly faster than ISO mount insta
 4. run `ansible-playbook -i 'localhost' playbook.yaml` 
 
 ## How it works
-vmWare `govc` is used to deploy an ova to ESXi.  This playbook uses ansible templating engine to generate a script (on your local filesystem not esxi) and then executes it.  Also, by using Ansible, configuring vmware tools `userdata` is greatly simplified, configurable, and automated.
+vmWare `govc` is used to deploy an ova to ESXi.  This playbook uses ansible templating engine to generate a script (on your local filesystem not esxi) and then executes it.  Also, by using Ansible, configuring vmware tools `userdata` is greatly simplified.
 
 Be advised this playbook is not idempotent. I may refactor it to use Ansible Pyvmomi module at some point but for now it meets my needs as a tool to rapidly deploy and bootstrap Ubuntu on ESXi. 
 
