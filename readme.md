@@ -76,14 +76,14 @@ Playbook vars (`playbook.yaml`) are self-explanatory. Note: `ubuntu-version` map
     # bios or efi
     firmware: bios
     serial_port: no
-    user_data_file: cloud-init-configs/ud-docker.yaml
+    user_data_file: cloud-init-d/ud-docker.yaml
     ubuntu_version: 22.04
     ssh_public_key_file: ~/.ssh/id_rsa.pub
 ```
 
 ## Cloud-Init UserData File
 
-  Cloud-init is very cool and this playbook only scratches the surface on what it can do.  At a high level, its a declarative way to bootstrap the OS with packages and configure various settings. The following user-data example updates all existing packages, adds docker apt repo, installs docker, installs various apt packages, configures password-less sudo, adds public ssh key, sets group memberships, sets default password of 'password' and forces a reset on the first login. You can find more examples in the `cloud-init-configs` directory. 
+  Cloud-init is very cool and this playbook only scratches the surface on what it can do.  At a high level, its a declarative way to bootstrap the OS with packages and configure various settings. The following user-data example updates all existing packages, adds docker apt repo, installs docker, installs various apt packages, configures password-less sudo, adds public ssh key, sets group memberships, sets default password of 'password' and forces a reset on the first login. You can find more examples in the `cloud-init-d` directory. 
 
 ```yaml
 #cloud-config
@@ -117,7 +117,7 @@ chpasswd:
 
 ## Common package file
 
-File `cloud-init-configs/common-packages.yaml` contains standard apt packages to install.  This list is merged with userdata file specified in the playbook.  Use common-packages.yaml for packages that are always installed (jq, tree, etc).   
+File `cloud-init-d/common-packages.yaml` contains standard apt packages to install.  This list is merged with userdata file specified in the playbook.  Use common-packages.yaml for packages that are always installed (jq, tree, etc).   
 
 ## Running the playbook
 

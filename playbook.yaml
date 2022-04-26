@@ -12,7 +12,7 @@
     # bios or efi
     firmware: bios
     serial_port: no
-    user_data_file: cloud-init-configs/ud-docker.yaml
+    user_data_file: cloud-init-d/ud-docker.yaml
     ubuntu_version: 22.04
     ssh_public_key_file: ~/.ssh/id_rsa.pub
   vars_files:
@@ -68,7 +68,7 @@
         userdata: "{{ ud | combine(merged)  }}"
       vars:
         ud: "{{ (lookup('template', user_data_file) | from_yaml) }}"
-        common: "{{ (lookup('file', 'cloud-init-configs/common-packages.yaml') | from_yaml) }}"
+        common: "{{ (lookup('file', 'cloud-init-d/common-packages.yaml') | from_yaml) }}"
         merged: "{{ {'packages': (common.packages + ud.packages) | sort }}}"
 
     - name: write options file from template
