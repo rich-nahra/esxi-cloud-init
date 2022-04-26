@@ -7,7 +7,7 @@
     mem: 8192
     disk: 64G
     # dhcp or ip
-    ip: 192.168.86.160
+    ip: dhcp
     ds: ds-nvme-evo5
     # bios or efi
     firmware: bios
