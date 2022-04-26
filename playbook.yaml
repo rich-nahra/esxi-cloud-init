@@ -2,7 +2,7 @@
 - hosts: localhost
   gather_facts: false
   vars:
-    vmname: docker
+    vmname: docker1
     cpu: 2
     mem: 8192
     disk: 64G

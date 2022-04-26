@@ -1,7 +1,12 @@
 {
     "cSpell.words": [
+        "containerd",
         "ethernets",
         "ipaddr",
+        "keyid",
+        "keyserver",
+        "NOPASSWD",
+        "pwauth",
         "vmname"
     ]
 }
