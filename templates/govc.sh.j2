@@ -10,6 +10,11 @@ govc vm.change -vm {{ vmname }} \
    -e disk.enableUUID=1 \
    -m {{ mem }} \
    -c {{ cpu }}
+{% if data_disks is defined%}
+{% for disk in data_disks %}
+govc vm.disk.create -vm {{ vmname }} -name {{ vmname }}/{{ disk }} -size {{ data_disks[disk] }} -thick -ds {{ ds }}
+{% endfor %}
+{% endif %}
 govc device.remove -vm {{ vmname }} floppy-8000
 govc device.remove -vm {{ vmname }} cdrom-3002
 {% if  firmware != 'bios' %}

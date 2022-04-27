@@ -5,10 +5,13 @@
     vmname: docker
     cpu: 2
     mem: 8192
-    disk: 64G
+    disk: 32G
     # dhcp or ip
     ip: dhcp
     ds: ds-nvme-evo5
+    # optional 
+    # data_disks:
+    #   docker-data: 20G
     # bios or efi
     firmware: bios
     serial_port: no
@@ -104,7 +107,7 @@
           environment: "{{ env }}"
 
         - name: wait until guest tools return IP address
-          shell: "govc ls --json /ha-datacenter/vm/{{ vmname }}| jq '.elements[].Object.Guest.Net[].IpAddress'"
+          shell: "govc ls --json /{{ env.GOVC_DATACENTER }}/vm/{{ vmname }}| jq '.elements[].Object.Guest.Net[].IpAddress'"
           environment: "{{ env }}"
           register: reg_vm_ip
           until: reg_vm_ip.stdout
