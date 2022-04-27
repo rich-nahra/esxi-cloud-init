@@ -1,12 +1,28 @@
 {
     "cSpell.words": [
         "containerd",
+        "crazylan",
+        "DATACENTER",
+        "esxi",
         "ethernets",
+        "govc",
         "ipaddr",
+        "jmespath",
         "keyid",
         "keyserver",
+        "netaddr",
         "NOPASSWD",
+        "nvme",
         "pwauth",
-        "vmname"
+        "Pyvmomi",
+        "runcmd",
+        "tasksel",
+        "templating",
+        "TLDR",
+        "userdata",
+        "vcpu",
+        "vmname",
+        "VMRC",
+        "xrdp"
     ]
 }

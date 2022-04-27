@@ -11,6 +11,7 @@ packages:
   - docker-ce
   - docker-ce-cli
   - containerd.io
+  - gnupg-agent
   - tasksel
 groups:
   - docker
@@ -24,8 +25,8 @@ users:
     shell: /bin/bash
 ssh_pwauth: True
 chpasswd:
-  list: |
-    ubuntu:password
+  list:
+    - ubuntu:password
 runcmd:
   - tasksel install ubuntu-desktop-minimal
   - apt install xrdp gnome-tweaks -y

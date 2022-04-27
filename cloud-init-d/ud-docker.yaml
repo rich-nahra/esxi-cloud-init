@@ -23,5 +23,5 @@ users:
     shell: /bin/bash
 ssh_pwauth: True
 chpasswd:
-  list: |
-    ubuntu:password
+  list:
+    - ubuntu:password

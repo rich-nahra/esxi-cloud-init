@@ -1,2 +1,8 @@
 #cloud-config
 {{ userdata | to_nice_yaml(indent=2, width=1337) }}
+final_message: |
+  cloud-init has finished
+  version: $version
+  timestamp: $timestamp
+  datasource: $datasource
+  uptime: $uptime

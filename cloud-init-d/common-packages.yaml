@@ -8,6 +8,5 @@ packages:
   - tree
   - wget
   - python3-pip
-  - gnupg-agent
   - cockpit
   - cockpit-pcp
