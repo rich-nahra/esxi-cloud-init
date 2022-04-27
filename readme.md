@@ -104,8 +104,9 @@ groups:
 users:
   - default
   - name: ubuntu
+    # ssh_key value is resolved at runtime 
     ssh-authorized-keys:
-      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBRUd0XSVkRniI2Z5Fi...[clipped]
+      - "{{ ssh_key }}"
     sudo: ALL=(ALL) NOPASSWD:ALL
     groups: [sudo,docker]
     shell: /bin/bash
@@ -142,4 +143,36 @@ ssh username@ip_address
 sudo tail -f /var/log/cloud-init-output.log
 ```
 
+## Helpful govc commands
+> you will need to export govc environment variables.  see govc documentation
 
+Tree 
+
+```bash
+govc tree
+```
+
+LS
+
+```bash
+govc ls 
+```
+
+Open VMRC from CLI
+
+```bash
+  govc vm.console my-vm
+  govc vm.console -capture screen.png my-vm  # screen capture
+  govc vm.console -capture - my-vm | display # screen capture to stdout
+  open $(govc vm.console my-vm)              # MacOSX VMRC
+  open $(govc vm.console -h5 my-vm)          # MacOSX H5
+  xdg-open $(govc vm.console my-vm)          # Linux VMRC
+  xdg-open $(govc vm.console -h5 my-vm)      # Linux H5
+```
+
+Power off and destroy vm 
+
+```bash
+govc vm.power -off my-vm
+govc vm.destroy my-vm
+```

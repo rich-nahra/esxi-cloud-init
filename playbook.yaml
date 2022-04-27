@@ -2,7 +2,7 @@
 - hosts: localhost
   gather_facts: false
   vars:
-    vmname: docker1
+    vmname: docker
     cpu: 2
     mem: 8192
     disk: 64G
@@ -80,13 +80,15 @@
       set_fact:
         metadata: "{{ metadata_dhcp if (ip | lower == 'dhcp') else metadata_static }}"
 
-    - name: diagnostic write merged userdata fact and metadata when running with test_mode=true
+    - name: diagnostic - write userdata and metadata when test_mode=true
       copy:
         content: "{{ item.content }}"
         dest: "{{ item.dest }}"
       loop:
         - {content: "{{ lookup('template', 'templates/userdata.yaml.j2') }}", dest: tmp/userdata.yaml }
         - {content: "{{ metadata }}", dest: tmp/metadata.json }
+      loop_control:
+        label: "{{ item.dest }}"
       when:
         - test_mode
 
