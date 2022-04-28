@@ -26,6 +26,7 @@ Before you can run this playbook you need to make sure the following software is
 * jq
 * govc https://github.com/vmware/govmomi/tree/master/govc (or homebrew on a mac)
 
+Before proceeding make sure you pip installed binaries are in your PATH.  A quick test is to run simply run `ansible -v`. 
 
 ## Variables
 There are two files that contain playbook variables.  `group_vars/all.yaml` contains variables that are more like constants meaning you shouldn't have to change them after they've been set.  The other is in the playbook itself (`playbook.yaml`) which are variables you set on a playbook run.  Variables such as hostname, ip, storage allocation, vcpu, mem, etc.  
