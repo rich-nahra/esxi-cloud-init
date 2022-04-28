@@ -61,7 +61,7 @@ cloud_image:
   '22.04': https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.ova
 ```
   
-Playbook vars (`playbook.yaml`) are self-explanatory. Note: `ubuntu-version` maps to values in `cloud_image` key in `group_vars/all.yaml` and `user_data_file` is covered in the next section.
+Playbook vars (`playbook.yaml`) are self-explanatory. Note: `ubuntu-version` maps to values in `cloud_image` key in `group_vars/all.yaml` and `user_data_file` is covered in the next section.  The data_disks key is an optional variable used to create and attach additional block devices to the vm.  `cloud-init-d/ud-docker-data-disk.yaml` is a cloud-init that demonstrates how to mount, partition and create filesystem on additional disks. 
 
 ```yaml
   vars:
@@ -73,6 +73,9 @@ Playbook vars (`playbook.yaml`) are self-explanatory. Note: `ubuntu-version` map
     ip: dhcp
     # datastore name
     ds: ds-nvme-evo5
+    data_disks:
+      # optional 
+      # docker-data: 20G
     # bios or efi
     firmware: bios
     serial_port: no
