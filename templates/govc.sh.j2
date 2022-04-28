@@ -10,7 +10,7 @@ govc vm.change -vm {{ vmname }} \
    -e disk.enableUUID=1 \
    -m {{ mem }} \
    -c {{ cpu }}
-{% if data_disks is defined%}
+{% if (data_disks is defined) and (data_disks is not none) %}
 {% for disk in data_disks %}
 govc vm.disk.create -vm {{ vmname }} -name {{ vmname }}/{{ disk }} -size {{ data_disks[disk] }} -thick -ds {{ ds }}
 {% endfor %}

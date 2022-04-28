@@ -9,9 +9,9 @@
     # dhcp or ip
     ip: dhcp
     ds: ds-nvme-evo5
-    # optional 
-    # data_disks:
-    #   docker-data: 20G
+    data_disks:
+      # optional 
+      # docker-data: 20G
     # bios or efi
     firmware: bios
     serial_port: no
@@ -21,6 +21,7 @@
   vars_files:
     - group_vars/metadata.yaml
   tasks:
+
     - name: check ssh key file path
       stat:
         path: "{{ ssh_public_key_file }}"

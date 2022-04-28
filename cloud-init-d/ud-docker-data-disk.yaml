@@ -1,0 +1,54 @@
+#cloud-config
+# make sure datadisk is defined in playbook vars first! 
+# demonstrates adding additional data block device
+# cloud-init partitions, formats and mounts data disk
+# configure docker daemon to use data disk 
+apt:
+  sources:
+    docker:
+      arches: amd64
+      source: "deb https://download.docker.com/linux/ubuntu $RELEASE stable"
+      keyserver: "hkp://keyserver.ubuntu.com:80"
+      keyid: 0EBFCD88
+package_upgrade: true
+packages:
+- docker-ce
+- docker-ce-cli
+- containerd.io
+groups:
+  - docker
+users:
+  - default
+  - name: ubuntu
+    ssh-authorized-keys:
+      - "{{ ssh_key }}"
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: [sudo,docker]
+    shell: /bin/bash
+ssh_pwauth: True
+chpasswd:
+  list:
+    - ubuntu:password
+# https://cloudinit.readthedocs.io/en/latest/topics/modules.html#disk-setup
+device_aliases:
+  datadisk: /dev/sdb
+disk_setup:
+  datadisk:
+    table_type: gpt
+    layout: true
+    overwrite: true
+fs_setup:
+- label: fs1
+  filesystem: ext4
+  device: datadisk
+  cmd: mkfs -t %(filesystem)s -L %(label)s %(device)s
+mounts:
+- ["datadisk", "/mnt/docker-data"]
+write_files:
+- content: |
+    {
+      "data-root": "/mnt/docker-data"
+    }
+  path: /etc/docker/daemon.json
+runcmd:
+- [ systemctl, restart, --no-block, docker.service ]
