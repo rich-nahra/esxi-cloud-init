@@ -4,6 +4,10 @@ This playbook is used to quickly deploy Ubuntu cloud-images and bootstrap the OS
 
 Using a cloud image with cloud-init is significantly faster than ISO mount install.  In my environment, I can have Ubuntu up and running in under 1 minute. 
 
+## Important Note
+
+When using ESXi free license the vSphere API is read-only which means this playbook will fail and that totally sucks.  So to use this playbook you need to have a trial license or a product key that enables vSphere API.  The cheapest option for homelab users is a vMug Advantage subscription which is a pretty good value at $200USD a year.  
+
 ## TLDR
 
 1. Clone this repo
