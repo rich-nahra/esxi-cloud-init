@@ -10,6 +10,12 @@ govc vm.change -vm {{ vmname }} \
    -e disk.enableUUID=1 \
    -m {{ mem }} \
    -c {{ cpu }}
+{% if (mac_address is defined) %}
+govc vm.network.change -vm {{ vmname }} \
+   -net.address={{ mac_address }} \
+   -vm {{ vmname }} \
+   ethernet-0
+{% endif %}
 {% if (data_disks is defined) and (data_disks is not none) %}
 {% for disk in data_disks %}
 govc vm.disk.create -vm {{ vmname }} -name {{ vmname }}/{{ disk }} -size {{ data_disks[disk] }} -thick -ds {{ ds }}

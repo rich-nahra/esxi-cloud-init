@@ -18,6 +18,8 @@
     user_data_file: cloud-init-d/ud-docker.yaml
     ubuntu_version: 22.04
     ssh_public_key_file: ~/.ssh/id_rsa.pub
+    # optional
+    # mac_address: AA:BB:CC:DD:EE:FF
   vars_files:
     - group_vars/metadata.yaml
   tasks:
